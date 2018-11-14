@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# PRENDI LE TEMPERATURE DA FUORI DIOCANE
+
+TODAY=$(date +%Y-%m-%d--%H-%M)
+#TEMPORANEO="/run/temp/fuori-$TODAY"
+TEMPORANEO="/run/temp/fuori"
+# http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IITALIAB2
+# sterlino murri http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IITALIAB2&format=1
+# giardini non funziona sempre: "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IBOLOGNA31&format=1"
+
+OLDTEMP=$(tail -n1 /run/temp/fuori-temperatura)
+
+#wget -q -O $TEMPORANEO "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IBOLOGNA29&format=1"
+# IEMILIAR134
+wget -q -O $TEMPORANEO "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IEMILIAR134&format=1"
+
+# zcat /run/temp/fuori-2014-02-07--06-20.gz > $TEMPORANEO 
+
+NEWTEMP=$(cat $TEMPORANEO |tail -n 2 |grep -v br | awk -F ',' '{print $2}')
+
+MAX="40"
+zero="0"
+MIN="-20"
+
+RESULT=$(echo $NEWTEMP'<'$MAX | bc -l)
+
+if [ "$RESULT" -eq "$zero" ]
+        then
+                echo "TROPPO CALDO: $NEWTEMP > $MAX"
+		echo "RESULT: $RESULT"
+                exit
+        else
+		echo DEBUG non è troppo caldo: $NEWTEMP
+	fi
+
+RESULT=$(echo $NEWTEMP'>'$MIN | bc -l)
+
+if [ "$RESULT" -eq "$zero" ]
+        then
+                echo "TROPPO FREDDO: $NEWTEMP < $MIN"
+                echo "RESULT: $RESULT"
+                exit
+        else
+                echo DEBUG non è troppo freddo: $NEWTEMP
+        fi
+
+
+# echo NEWTEMP: $NEWTEMP
+
+OLDPLUS=$(echo "$OLDTEMP + 10" |bc)
+# echo OLDPLUS: $OLDPLUS
+
+MAGGIORE=$(echo $NEWTEMP'>'$OLDPLUS | bc -l)
+# echo MAGGIORE: $MAGGIORE
+
+if [ "$MAGGIORE" -ne "$zero" ] 
+	then
+		echo FUCKFARENHEIT
+		exit
+	fi
+
+echo $NEWTEMP >> /run/temp/fuori-temperatura
+#cat $TEMPORANEO |tail -n 2 |grep -v br | awk -F ',' '{print $2}' >> /run/temp/fuori-temperatura
+cat $TEMPORANEO |tail -n 2 |grep -v br | awk -F ',' '{print $9}' > /run/temp/fuori-umidita
+cat $TEMPORANEO |tail -n 2 |grep -v br | awk -F ',' '{print $4}' > /run/temp/fuori-pressione
+#gzip $TEMPORANEO

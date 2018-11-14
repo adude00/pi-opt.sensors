@@ -1,0 +1,7 @@
+TODAY=$(date +%Y-%m-%d--%H-%M)
+TEMPORANEO="/run/temp/fuori-$TODAY"
+elinks -dump "http://www.wunderground.com/weatherstation/WXDailyHistory.asp?ID=IBOLOGNA31" > $TEMPORANEO
+cat $TEMPORANEO |grep Temperature: |head -n 1 | awk -F ' ' '{print $2}' | awk -F ' ' '{print $1}' > /run/temp/fuori-temperatura
+cat $TEMPORANEO |grep Humidity: |head -n 1 | awk -F ' ' '{print $2}' | awk -F ' ' '{print $1}' |sed s/%// > /run/temp/fuori-umidita
+cat $TEMPORANEO |grep Pressure: |head -n 1 | awk -F ' ' '{print $2}' | awk -F ' ' '{print $1}' |sed s/hPa// > /run/temp/fuori-pressione
+gzip $TEMPORANEO
