@@ -1,7 +1,7 @@
 #!/bin/sh
-/opt/sensors/temp-camera > /run/temp/temp
-cp /run/temp/temp /run/temp/temp-camera
-               cp /run/temp/temp-camera /opt/temp/run # per OH
+#/opt/sensors/temp-camera > /run/temp/temp
+#cp /run/temp/temp /run/temp/temp-camera
+#               cp /run/temp/temp-camera /opt/temp/run # per OH
 /opt/sensors/temp-soggiorno > /run/temp/temp
 cp /run/temp/temp /run/temp/temp-soggiorno
 /opt/sensors/watt.py |cut -dA -f2 > /run/temp/temp
