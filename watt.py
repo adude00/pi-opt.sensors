@@ -25,5 +25,7 @@ for j in range(SAMPLES):
         sqsum += (value * value)
 
 current = math.sqrt(sqsum/SAMPLES)*30/1000
-print("{:7.4f}A{:6.0f}".format(current,current * 233 - 137))
+print("{:7.4f}A{:6.0f}".format(current,current * 233 - 130))
 
+# -137 da meta gennaio a fine marzo 2019: - 4.74 %
+# -130 da 1 aprile 2019: DA SCOPRIRE A GIUGNO

@@ -1,4 +1,0 @@
-CHANGELOG Calibrazione:
-
-- 2014 09 05
-22C circa in tutta la casa, freddo, termi spenti... Un filo meno di 22 in camera, un filo di più in soggiorno. Cerco di mettere 21.8-21.9 in camera e 22.1-22.2 in soggiorno.
